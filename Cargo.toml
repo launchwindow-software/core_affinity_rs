@@ -1,6 +1,6 @@
 [package]
 name = "core_affinity"
-version = "1.0.0"
+version = "0.8.99"
 authors = [
     "Adam Bryant <adam.bryant@launchwindow.io>",
     "Justin Sharma <justin.sharma@launchwindow.io>",
