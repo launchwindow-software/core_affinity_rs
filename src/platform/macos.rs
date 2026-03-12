@@ -45,10 +45,9 @@ pub fn get_core_ids() -> Option<Vec<CoreId>> {
 
 /// Attempts to pin the current thread to the provided macOS core id.
 pub fn set_for_current(core_id: CoreId) -> bool {
-    let policy_size = match MachMsgTypeNumberT::try_from(mem::size_of::<ThreadAffinityPolicyDataT>())
-    {
-        Ok(value) => value,
-        Err(_) => return false,
+    let Ok(policy_size) = MachMsgTypeNumberT::try_from(mem::size_of::<ThreadAffinityPolicyDataT>())
+    else {
+        return false;
     };
     let integer_size = match MachMsgTypeNumberT::try_from(mem::size_of::<IntegerT>()) {
         Ok(value) if value != 0 => value,
@@ -56,14 +55,12 @@ pub fn set_for_current(core_id: CoreId) -> bool {
     };
     let thread_affinity_policy_count = policy_size / integer_size;
 
-    let affinity_tag = match IntegerT::try_from(core_id.id) {
-        Ok(value) => value,
-        Err(_) => return false,
+    let Ok(affinity_tag) = IntegerT::try_from(core_id.id) else {
+        return false;
     };
     let pthread = unsafe { pthread_self() };
-    let thread = match ThreadT::try_from(pthread) {
-        Ok(value) => value,
-        Err(_) => return false,
+    let Ok(thread) = ThreadT::try_from(pthread) else {
+        return false;
     };
 
     let mut info = ThreadAffinityPolicyDataT { affinity_tag };
