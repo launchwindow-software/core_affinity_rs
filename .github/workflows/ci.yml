@@ -38,10 +38,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install toolchain with target
-        uses: dtolnay/rust-toolchain@stable
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1.15.3
         with:
+          cache: false
           target: ${{ matrix.target }}
+          rustflags: ""
 
       - name: Build
         run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose
@@ -69,10 +71,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install toolchain with target
-        uses: dtolnay/rust-toolchain@stable
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1.15.3
         with:
+          cache: false
           target: ${{ matrix.target }}
+          rustflags: ""
 
       - name: Build
         run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose
@@ -97,10 +101,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install toolchain with target
-        uses: dtolnay/rust-toolchain@stable
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1.15.3
         with:
+          cache: false
           target: ${{ matrix.target }}
+          rustflags: ""
 
       - name: Build
         run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose
