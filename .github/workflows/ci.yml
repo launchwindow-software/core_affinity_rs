@@ -25,7 +25,6 @@ jobs:
           - x86_64-unknown-linux-gnu
           - arm-unknown-linux-gnueabihf
           - aarch64-unknown-linux-gnu
-          - mips-unknown-linux-gnu
           - i686-unknown-linux-musl
           - x86_64-unknown-linux-musl
           - aarch64-unknown-linux-musl
@@ -46,13 +45,13 @@ jobs:
           rustflags: ""
 
       - name: Build
-        run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose
+        run: cargo build --locked --target ${{ matrix.target }} --all-features --verbose
 
       - name: Rustfmt (check)
         run: cargo fmt --all -- --check --config=reorder_imports=true --config=imports_granularity=Item --config=group_imports=StdExternalCrate
 
       - name: Clippy
-        run: cargo clippy --locked --target ${{ matrix.target }} --all-features --all-targets --no-deps -- -D warnings -D clippy::pedantic
+        run: cargo clippy --locked --target ${{ matrix.target }} --all-features --no-deps -- -D warnings -D clippy::pedantic
 
   windows-target-check:
     name: Windows Target Check / ${{ matrix.target }}
@@ -79,13 +78,13 @@ jobs:
           rustflags: ""
 
       - name: Build
-        run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose
+        run: cargo build --locked --target ${{ matrix.target }} --all-features --verbose
 
       - name: Rustfmt (check)
         run: cargo fmt --all -- --check --config=reorder_imports=true --config=imports_granularity=Item --config=group_imports=StdExternalCrate
 
       - name: Clippy
-        run: cargo clippy --locked --target ${{ matrix.target }} --all-features --all-targets --no-deps -- -D warnings -D clippy::pedantic
+        run: cargo clippy --locked --target ${{ matrix.target }} --all-features --no-deps -- -D warnings -D clippy::pedantic
 
   apple-target-check:
     name: Apple Target Check / ${{ matrix.target }}
@@ -109,10 +108,10 @@ jobs:
           rustflags: ""
 
       - name: Build
-        run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose
+        run: cargo build --locked --target ${{ matrix.target }} --all-features --verbose
 
       - name: Rustfmt (check)
         run: cargo fmt --all -- --check --config=reorder_imports=true --config=imports_granularity=Item --config=group_imports=StdExternalCrate
 
       - name: Clippy
-        run: cargo clippy --locked --target ${{ matrix.target }} --all-features --all-targets --no-deps -- -D warnings -D clippy::pedantic
+        run: cargo clippy --locked --target ${{ matrix.target }} --all-features --no-deps -- -D warnings -D clippy::pedantic

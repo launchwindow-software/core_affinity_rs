@@ -34,27 +34,42 @@ unsafe extern "C" {
 }
 
 /// Returns core ids available on macOS.
+#[allow(clippy::unnecessary_wraps)]
 pub fn get_core_ids() -> Option<Vec<CoreId>> {
     Some(
         (0..num_cpus::get())
-            .map(|n| CoreId { id: n as usize })
+            .map(|n| CoreId { id: n })
             .collect::<Vec<_>>(),
     )
 }
 
 /// Attempts to pin the current thread to the provided macOS core id.
 pub fn set_for_current(core_id: CoreId) -> bool {
-    let thread_affinity_policy_count: MachMsgTypeNumberT =
-        mem::size_of::<ThreadAffinityPolicyDataT>() as MachMsgTypeNumberT
-            / mem::size_of::<IntegerT>() as MachMsgTypeNumberT;
-
-    let mut info = ThreadAffinityPolicyDataT {
-        affinity_tag: core_id.id as IntegerT,
+    let policy_size = match MachMsgTypeNumberT::try_from(mem::size_of::<ThreadAffinityPolicyDataT>())
+    {
+        Ok(value) => value,
+        Err(_) => return false,
     };
+    let integer_size = match MachMsgTypeNumberT::try_from(mem::size_of::<IntegerT>()) {
+        Ok(value) if value != 0 => value,
+        _ => return false,
+    };
+    let thread_affinity_policy_count = policy_size / integer_size;
+
+    let affinity_tag = match IntegerT::try_from(core_id.id) {
+        Ok(value) => value,
+        Err(_) => return false,
+    };
+    let thread = match ThreadT::try_from(pthread_self()) {
+        Ok(value) => value,
+        Err(_) => return false,
+    };
+
+    let mut info = ThreadAffinityPolicyDataT { affinity_tag };
 
     let res = unsafe {
         thread_policy_set(
-            pthread_self() as ThreadT,
+            thread,
             THREAD_AFFINITY_POLICY,
             &mut info as ThreadPolicyT,
             thread_affinity_policy_count,
@@ -83,6 +98,6 @@ mod tests {
     fn test_macos_set_for_current() {
         let ids = get_core_ids().unwrap();
         assert!(!ids.is_empty());
-        assert!(set_for_current(ids[0]))
+        assert!(set_for_current(ids[0]));
     }
 }
