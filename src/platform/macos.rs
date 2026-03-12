@@ -60,7 +60,8 @@ pub fn set_for_current(core_id: CoreId) -> bool {
         Ok(value) => value,
         Err(_) => return false,
     };
-    let thread = match ThreadT::try_from(pthread_self()) {
+    let pthread = unsafe { pthread_self() };
+    let thread = match ThreadT::try_from(pthread) {
         Ok(value) => value,
         Err(_) => return false,
     };
