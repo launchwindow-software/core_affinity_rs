@@ -1,0 +1,9 @@
+[global]
+exclude = [".git", ".github", "target"]
+respect-gitignore = true
+
+[MD013]
+line-length = 120
+code-blocks = false
+tables = false
+headings = true

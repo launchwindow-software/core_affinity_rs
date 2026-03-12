@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  linux-target-check:
+    name: Linux Target Check / ${{ matrix.target }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - i686-unknown-linux-gnu
+          - x86_64-unknown-linux-gnu
+          - arm-unknown-linux-gnueabihf
+          - aarch64-unknown-linux-gnu
+          - mips-unknown-linux-gnu
+          - i686-unknown-linux-musl
+          - x86_64-unknown-linux-musl
+          - aarch64-unknown-linux-musl
+          - i686-linux-android
+          - x86_64-linux-android
+          - arm-linux-androideabi
+          - aarch64-linux-android
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust stable with target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+          components: clippy, rustfmt
+
+      - name: Build
+        run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose
+
+      - name: Rustfmt (check)
+        run: cargo fmt --all -- --check --config=reorder_imports=true --config=imports_granularity=Item --config=group_imports=StdExternalCrate
+
+      - name: Clippy
+        run: cargo clippy --locked --target ${{ matrix.target }} --all-features --all-targets --no-deps -- -D warnings -D clippy::pedantic
+
+  windows-target-check:
+    name: Windows Target Check / ${{ matrix.target }}
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - i686-pc-windows-msvc
+          - x86_64-pc-windows-msvc
+          - aarch64-pc-windows-msvc
+          - i686-pc-windows-gnu
+          - x86_64-pc-windows-gnu
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust stable with target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+          components: clippy, rustfmt
+
+      - name: Build
+        run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose
+
+      - name: Rustfmt (check)
+        run: cargo fmt --all -- --check --config=reorder_imports=true --config=imports_granularity=Item --config=group_imports=StdExternalCrate
+
+      - name: Clippy
+        run: cargo clippy --locked --target ${{ matrix.target }} --all-features --all-targets --no-deps -- -D warnings -D clippy::pedantic
+
+  apple-target-check:
+    name: Apple Target Check / ${{ matrix.target }}
+    runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - x86_64-apple-darwin
+          - aarch64-apple-darwin
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust stable with target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+          components: clippy, rustfmt
+
+      - name: Build
+        run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose
+
+      - name: Rustfmt (check)
+        run: cargo fmt --all -- --check --config=reorder_imports=true --config=imports_granularity=Item --config=group_imports=StdExternalCrate
+
+      - name: Clippy
+        run: cargo clippy --locked --target ${{ matrix.target }} --all-features --all-targets --no-deps -- -D warnings -D clippy::pedantic
