@@ -6,7 +6,7 @@ authors = [
     "Justin Sharma <justin.sharma@launchwindow.io>",
 ]
 edition = "2024"
-rust-version = "1.93.0"
+rust-version = "1.85.0"
 description = "CPU affinity management for Rust threads across supported platforms"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
