@@ -38,12 +38,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Rust stable with target
+      - name: Install toolchain with target
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
           target: ${{ matrix.target }}
-          components: clippy, rustfmt
 
       - name: Build
         run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose
@@ -71,12 +69,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Rust stable with target
+      - name: Install toolchain with target
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
           target: ${{ matrix.target }}
-          components: clippy, rustfmt
 
       - name: Build
         run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose
@@ -101,12 +97,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Rust stable with target
+      - name: Install toolchain with target
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
           target: ${{ matrix.target }}
-          components: clippy, rustfmt
 
       - name: Build
         run: cargo build --locked --target ${{ matrix.target }} --all-features --all-targets --verbose

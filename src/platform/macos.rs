@@ -24,7 +24,7 @@ type ThreadPolicyT = *mut ThreadAffinityPolicyDataT;
 
 const THREAD_AFFINITY_POLICY: ThreadPolicyFlavorT = 4;
 
-extern "C" {
+unsafe extern "C" {
     fn thread_policy_set(
         thread: ThreadT,
         flavor: ThreadPolicyFlavorT,
